@@ -14,4 +14,4 @@ const userController = require('../controllers/userController')
 
 
 
-module.exports = route
+module.exports = router
