@@ -29,7 +29,7 @@
 
 - Books Model
 ```yaml
-{ 
+{
   title: {string, mandatory, unique},
   excerpt: {string, mandatory}, 
   userId: {ObjectId, mandatory, refs to user model},
