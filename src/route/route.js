@@ -5,8 +5,8 @@ const reviewController = require('../controllers/reviewController')
 const userController = require('../controllers/userController')
 
 
-router.post('/books',bookController.createBook)
-router.get('/books',bookController.getBooks)
+
+
 
 
 
