@@ -22,7 +22,10 @@ const isValidPassword = function (password) {
     password = password.trim()
     return (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,15}$/).test(password)
 }
+const ratingCheck = function(value){
+    if(typeof value === 'number' && (value>=1 && value<=5)) return true
+      return false
+  }
 
 
-
-module.exports={isValid,isValidName,isValidMobile,validateEmail,isValidPassword}
+module.exports={isValid,isValidName,isValidMobile,validateEmail,isValidPassword,ratingCheck}

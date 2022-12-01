@@ -1,7 +1,6 @@
 const mongoose=require("mongoose")
 const bookModel=require("../models/bookModel")
 const userModel=require("../models/userModel")
-const reviewModel = require("../models/reviewModel")
 const {isValid}=require("../validator/validation")
 const reviewModel = require("../models/reviewModel")
 
