@@ -48,7 +48,7 @@ const createBook= async function(req,res){
 
 }
 
-const getBooks= async function(req,res){
+const getBooks = async function (req, res) {
    try {
       let data=req.query
       if(data){
