@@ -127,7 +127,7 @@
 - Check if the review exist with the reviewId. Check if the book exist with the bookId. Send an error response with appropirate status code like [this](#error-response-structure) if the book or book review does not exist
 - Delete the related reivew.
 - Update the books document - decrease review count by one
-
+ 
 ### Authentication
 - Make sure all the book routes are protected.
 
