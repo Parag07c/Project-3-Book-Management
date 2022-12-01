@@ -3,6 +3,7 @@ const bookModel=require("../models/bookModel")
 const userModel=require("../models/userModel")
 const reviewModel = require("../models/reviewModel")
 const {isValid}=require("../validator/validation")
+const reviewModel = require("../models/reviewModel")
 
 const createBook= async function(req,res){
    try{
@@ -73,13 +74,75 @@ const getBooks = async function (req, res) {
       }
 
    } catch (error) {
-      return res.status(500).send({ status: false, message: error.message })
-
+    return res.status(500).send({status:false,message:error.message})
+      
    }
 }
 
+const getBookById = async function(req,res){
+   try {
+      let Id= req.params.bookId
+      if(!mongoose.isValidObjectId(Id))return res.status(400).send({status:false,message:"Please enter valid BookId"})
 
+      let collection= await bookModel.findById(Id)
+      if(!collection)return res.status(404).send({status:false,message:"Book not found"})
 
+      if(collection.isDeleted)return res.status(400).send({status:false,message:"Book no longer exist"})
 
+      let reviewsData= await reviewModel.find({bookId:Id}).select({_id:1,bookId:1,reviewedBy:1,reviewedAt:1,rating:1,review:1})
+       
+      return res.status(200).send({status:true,message:"Book lists", data:collection,reviewsData})
+      
+   } catch (error) {
+    return res.status(500).send({status:false,message:error.message})
+      
+   }
+}
+const updateBook = async function(req,res){
+   try {
+      let bookId = req.params.bookId
+      let data =req.body
+      let{title,excerpt,ISBN} = data
 
-module.exports = { createBook, getBooks}
+      if(!mongoose.isValidObjectId(bookId)) return res.status(400).send({status : false,message:"please enter valid bookid"})
+      if(!isValid(title))return res.status(400).send({status : false, message :"Please enter a title"})
+      let titleCheck = await bookModel.findOne({title})
+      if(titleCheck) return res.status(400).send({status : false, message : "title is already exists"})
+
+      let isbnCheck = await bookModel.findOne({ISBN :ISBN})
+      if(isbnCheck) return res.status(400).send({status : false, message : "ISBN is already exists"})
+
+      let idCheck = await bookModel.findById(bookId)
+      if(!idCheck) return res.status(404).send({status :false,message : "book not found "})
+
+      if(idCheck.isDeleted==true) return res.status(400).send({status : false,message : "this book is no longer exist" })
+
+      await bookModel.findOneAndUpdate({_id:bookId},{$set : {title : title, excerpt : excerpt,releasedAt : Date.now(),ISBN : ISBN}})
+      let update =await bookModel.findOne({_id:bookId})
+      return res.status(200).send({status :true , message: "successfully updated",data :update })
+
+   } catch (error) {
+      return res.status(500).send({status : false,message : error.message})
+   }
+}
+const deleteBook= async function(req,res){
+   try {
+      let Id=req.params.bookId
+      if(!mongoose.isValidObjectId(Id))return res.status(400).send({status:false,message:"Please enter valid BookId"})
+
+      let collection= await bookModel.findById(Id)
+      if(!collection)return res.status(404).send({status:false,message:"Book not found"})
+
+      if(collection.isDeleted)return res.status(400).send({status:false,message:"Book no longer exist"})
+
+      await bookModel.findOneAndUpdate({_id:Id},{$set:{isDeleted:true,deletedAt:Date.now()}})
+
+      let deleteData= await bookModel.findById(Id)
+      return res.status(200).send({status:true,message:"succesfully deleted",data:deleteData})
+
+   } catch (error) {
+    return res.status(500).send({status:false,message:error.message})
+      
+   }
+}
+module.exports={createBook,getBooks,getBookById,updateBook,deleteBook}
