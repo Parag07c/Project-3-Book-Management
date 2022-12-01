@@ -48,4 +48,46 @@ const createReviews = async function(req,res){
  
 }
 
-module.exports = {createReviews}
+const updateReviews = async function (req,res){
+    try {
+        let {bookId,reviewId}=req.params
+        let {review, rating, reviewedBy}=req.body
+
+        if(!mongoose.isValidObjectId(bookId))return res.status(400).send({status:false,message:"Invalid BookId"})
+        if(!mongoose.isValidObjectId(reviewId))return res.status(400).send({status:false,message:"Invalid reviewId"})
+
+        if(!Object.keys(req.body).length)return res.status(400).send({status:false,message:"Please provide request body"})
+
+        let bookData= await bookModel.findById(bookId)
+        if(!bookData)return res.status(404).send({status:false,message:"Book not found"})
+
+        if(bookData.isDeleted)return res.status(400).send({status:false,message:"Book No longer exists"})
+
+        let reviewDetail= await reviewModel.findById(reviewId)
+        if(!reviewDetail)return res.status(404).send({status:false,message:"Review not found"})
+
+        if(reviewDetail.isDeleted)return res.status(400).send({status:false,message:"review no longer exist"})
+
+        if(!isValid(review))return res.status(400).send({status:false,message:"Please provide review"})
+        if(!rating) return res.status(400).send({status :false,message:"please provide rating"})
+
+        if(!ratingCheck(rating)) return res.status(400).send({status :false,message:"rating should be in  between 1 to 5"})
+
+        if(!isValid(reviewedBy))return res.status(400).send({status:false,message:"Please provide reviewer name"})
+        
+        if(!isValidName(reviewedBy))return res.status(400).send({status:false,message:"Please provide valid reviewer name"})
+ 
+
+        await reviewModel.findOneAndUpdate({_id:reviewId},{$set:{review:review,rating:rating,reviewedBy:reviewedBy}})
+        let updateReview = await reviewModel.findById(reviewId) 
+
+        return res.status(200).send({status:true,message:"review updated successfully",data:updateReview})
+
+    } catch (error) {
+
+        return res.status(500).send({status : false, message : error.message})
+        
+    }
+}
+
+module.exports = {createReviews,updateReviews}
