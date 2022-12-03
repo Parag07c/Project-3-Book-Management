@@ -1,4 +1,5 @@
 
+// <<<<<<<<<<<<<----------- Contains all validation function -------------->>>>>>>>>>>>>>>>
 
 
 const isValid = function(value){
@@ -20,12 +21,15 @@ const validateEmail = function (email) {
 }
 const isValidPassword = function (password) {
     password = password.trim()
-    return (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,15}$/).test(password)
+    return (/^[a-zA-Z0-9!@#$%^&*]{8,15}$/).test(password)
 }
 const ratingCheck = function(value){
     if(typeof value === 'number' && (value>=1 && value<=5)) return true
       return false
   }
 
+  const isValidDate=function(date){
+    return (/^\d{4}-\d{2}-\d{2}$/.test(date))
+  }
 
-module.exports={isValid,isValidName,isValidMobile,validateEmail,isValidPassword,ratingCheck}
+module.exports={isValid,isValidName,isValidMobile,validateEmail,isValidPassword,ratingCheck,isValidDate}
