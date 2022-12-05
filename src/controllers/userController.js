@@ -2,6 +2,10 @@ const userModel = require("../models/userModel.js")
 const jwt = require("jsonwebtoken")
 const { isValid, isValidName, isValidMobile, validateEmail, isValidPassword } = require("../validator/validation.js")
 
+
+// <<<<<<<<<<<<<------------- User register-------------->>>>>>>>>>>>>>>>
+
+
 const createUser = async function (req, res) {
     try {
         let data = req.body
@@ -45,6 +49,9 @@ const createUser = async function (req, res) {
     }
 }
 
+// <<<<<<<<<<<<<-------------User Login-------------->>>>>>>>>>>>>>>>
+
+
 const userLogin = async function (req, res) {
     try {
         const { email, password } = req.body
@@ -75,6 +82,6 @@ const userLogin = async function (req, res) {
 }
 
 
-
+// <<<<<<<<<<<<<----------- Export all the functions -------------->>>>>>>>>>>>>>>>
 
 module.exports = { createUser, userLogin }
